@@ -1,6 +1,6 @@
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PlayButton from "./PlayButton";
 import PauseButton from "./PauseButton";
 import ResetButton from "./ResetButton";
@@ -11,6 +11,7 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(focusMinutes * 60);
+  const sessionEndAudio = useRef(new Audio("/sounds/session-ended.mp3"));
 
   useEffect(() => {
     if (!isPlaying) {
@@ -21,6 +22,11 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick }) {
       setTimeLeft((current) => {
         if (current <= 1) {
           if (mode === "work") {
+            sessionEndAudio.current.currentTime = 0;
+            sessionEndAudio.current.play().catch((error) => {
+              console.log("Audio play failed:", error);
+            });
+
             setMode("break");
             return breakMinutes * 60;
           }
