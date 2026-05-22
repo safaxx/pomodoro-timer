@@ -83,6 +83,6 @@ One area that isn’t fully polished yet is the user experience around alerts an
 
 With another day I would:
 
-add a pop-up overlay mode so the timer can float above other apps for better focus,
-add sound effects to all controls so button presses feel more interactive,
-make the session-complete transition more visually exciting with a stronger animation or celebration effect to boost motivation.
+* add a pop-up overlay mode so the timer can float above other apps for better focus,
+* add sound effects to all controls so button presses feel more interactive,
+* make the session-complete transition more visually exciting with a stronger animation or celebration effect to boost motivation.
