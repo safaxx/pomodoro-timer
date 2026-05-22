@@ -132,7 +132,7 @@ function Timer({
       <div className="timer-label">{mode === "work" ? "Focus" : "Break"}</div>
       {showCompletionMessage && (
         <div className="completion-message">
-          ✓ Focus session complete! Break starts now.
+          ✓ Focus session complete! Time for a break.
         </div>
       )}
 
