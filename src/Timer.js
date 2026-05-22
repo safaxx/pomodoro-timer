@@ -6,12 +6,20 @@ import PauseButton from "./PauseButton";
 import ResetButton from "./ResetButton";
 import SettingsButton from "./SettingsButton";
 
-function Timer({ focusMinutes, breakMinutes, onSettingsClick, onSessionComplete, onShowHistory }) {
+function Timer({
+  focusMinutes,
+  breakMinutes,
+  onSettingsClick,
+  onSessionComplete,
+  onShowHistory,
+}) {
   const [mode, setMode] = useState("work");
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(focusMinutes * 60);
   const sessionEndAudio = useRef(new Audio("/sounds/session-ended.mp3"));
+  const transitionTimeoutRef = useRef(null);
+  const [showCompletionMessage, setShowCompletionMessage] = useState(false);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -22,7 +30,6 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick, onSessionComplete,
       setTimeLeft((current) => {
         if (current <= 1) {
           if (mode === "work") {
-            // notify parent that a focus session completed
             try {
               onSessionComplete?.({
                 id: Date.now(),
@@ -39,11 +46,19 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick, onSessionComplete,
               console.log("Audio play failed:", error);
             });
 
-            setMode("break");
-            return breakMinutes * 60;
-          }
+            setIsPlaying(false);
+            setShowCompletionMessage(true);
 
-          // break ended
+            transitionTimeoutRef.current = setTimeout(() => {
+              setShowCompletionMessage(false);
+              setMode("break");
+              setTimeLeft(breakMinutes * 60);
+              setHasStarted(true);
+              setIsPlaying(true);
+            }, 3000);
+
+            return 0;
+          }
           try {
             onSessionComplete?.({
               id: Date.now(),
@@ -65,7 +80,15 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick, onSessionComplete,
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [isPlaying, mode, breakMinutes, focusMinutes]);
+  }, [isPlaying, mode, breakMinutes, focusMinutes, onSessionComplete]);
+
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (hasStarted) {
@@ -86,8 +109,13 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick, onSessionComplete,
   const green = "#08a747";
 
   const handleReset = () => {
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+    }
+
     setIsPlaying(false);
     setHasStarted(false);
+    setShowCompletionMessage(false);
     setMode("work");
     setTimeLeft(focusMinutes * 60);
   };
@@ -102,6 +130,11 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick, onSessionComplete,
   return (
     <div className="timer-container">
       <div className="timer-label">{mode === "work" ? "Focus" : "Break"}</div>
+      {showCompletionMessage && (
+        <div className="completion-message">
+          ✓ Focus session complete! Break starts now.
+        </div>
+      )}
 
       <CircularProgressbar
         value={timeLeft}
@@ -123,7 +156,9 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick, onSessionComplete,
           />
         )}
         <ResetButton onClick={handleReset} />
-        <button className="with-text history-toggle" onClick={onShowHistory}>History</button>
+        <button className="with-text history-toggle" onClick={onShowHistory}>
+          History
+        </button>
         <SettingsButton onClick={onSettingsClick} />
       </div>
     </div>
