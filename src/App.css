@@ -1,38 +1,131 @@
-.App {
+:root{
+  --red: #f54e4e;
+  --green: #4aec8c;
+}
+
+body{
+  background-color: #30384b;
+  color: #eee;
+  margin: 0;
+}
+main{
+  padding-top: 50px;
+  max-width: 340px;
+  margin: 0 auto;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+button{
+  background-color: transparent;
+  color: rgba(255,255,255,0.8);
+  border:0;
+  display: inline-block;
+  width: 100px;
+  cursor: pointer;
+  /* transition: all 0.3s ease; */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+button:hover{
+  color: rgba(255,255,255,1);
+  /* transform: scale(1.05); */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+button.with-text{
+  width: auto;
+  background-color:rgba(255,255,255,0.1);
+  border-radius:10px;
+  padding: 10px 20px;
+  font-size: 1.4rem;
+  line-height: 36px;
+}
+
+button.with-text:hover{
+  background-color:rgba(255,255,255,0.2);
+  /* transform: scale(1.02); */
+}
+
+button.with-text svg{
+  width: 36px;
+  float:left;
+  margin-right: 5px;
+}
+
+.timer-container {
+  position: relative;
+  padding-top: 0px;
+}
+
+.timer-label {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 0 18px;
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+label{
+  display:block;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  text-transform: capitalize;
+}
+
+.settings {
+  text-align: center;
+}
+
+.settings h2 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #999;
+}
+
+.settings-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.settings-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.settings-item label {
+  color: #999;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  margin-top: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.settings-item input {
+  width: 80px;
+  padding: 8px 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  outline: none;
+}
+
+.settings-item input:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.settings-item input:focus {
+  background-color: rgba(255, 255, 255, 0.2);
 }
