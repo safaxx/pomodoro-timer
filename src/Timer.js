@@ -6,7 +6,7 @@ import PauseButton from "./PauseButton";
 import ResetButton from "./ResetButton";
 import SettingsButton from "./SettingsButton";
 
-function Timer({ focusMinutes, breakMinutes, onSettingsClick }) {
+function Timer({ focusMinutes, breakMinutes, onSettingsClick, onSessionComplete, onShowHistory }) {
   const [mode, setMode] = useState("work");
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
@@ -22,6 +22,18 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick }) {
       setTimeLeft((current) => {
         if (current <= 1) {
           if (mode === "work") {
+            // notify parent that a focus session completed
+            try {
+              onSessionComplete?.({
+                id: Date.now(),
+                type: "focus",
+                durationMinutes: focusMinutes,
+                endedAt: new Date().toISOString(),
+              });
+            } catch (e) {
+              console.warn("onSessionComplete handler failed", e);
+            }
+
             sessionEndAudio.current.currentTime = 0;
             sessionEndAudio.current.play().catch((error) => {
               console.log("Audio play failed:", error);
@@ -29,6 +41,18 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick }) {
 
             setMode("break");
             return breakMinutes * 60;
+          }
+
+          // break ended
+          try {
+            onSessionComplete?.({
+              id: Date.now(),
+              type: "break",
+              durationMinutes: breakMinutes,
+              endedAt: new Date().toISOString(),
+            });
+          } catch (e) {
+            console.warn("onSessionComplete handler failed", e);
           }
 
           setMode("work");
@@ -99,6 +123,7 @@ function Timer({ focusMinutes, breakMinutes, onSettingsClick }) {
           />
         )}
         <ResetButton onClick={handleReset} />
+        <button className="with-text history-toggle" onClick={onShowHistory}>History</button>
         <SettingsButton onClick={onSettingsClick} />
       </div>
     </div>
