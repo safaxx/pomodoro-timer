@@ -75,7 +75,7 @@ What it gave me:
 2. For daily reset, it gave logic to compare saved history date to today and clear the history if the day changed.
 3. Use Web Audio API
 
-# The AI also suggested using the Web Audio API for the session sound effect, but I changed that to a simpler new Audio("/sounds/session-ended.mp3") approach and used an MP3 file instead.
+* The AI also suggested using the Web Audio API for the session sound effect, but I changed that to a simpler new Audio("/sounds/session-ended.mp3") approach and used an MP3 file instead.
 
 ## Honest gap
 
