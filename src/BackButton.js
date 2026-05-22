@@ -1,6 +1,6 @@
-function BackButton({ onClick }) {
+function BackButton({ onClick, className = "" }) {
   return (
-    <button onClick={onClick} className="with-text">
+    <button onClick={onClick} className={`with-text ${className}`}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
